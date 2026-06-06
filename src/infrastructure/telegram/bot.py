@@ -1,15 +1,21 @@
 import os
-from src.infrastructure.ollama.ollama_service import OllamaService
-from src.infrastructure.firebase.firestore_repository import FirestoreExpenseRepository
-from src.application.use_cases.get_summary import GetSummaryUseCase
-from src.application.use_cases.add_expense import AddExpenseUseCase
-from src.application.use_cases.get_recent_expenses import GetRecentExpensesUseCase
-from src.application.use_cases.analyze_expenses import AnalyzeExpensesUseCase
+
+print("BOT FILE LOADED")
+
+from src.infrastructure.postgres.database import (
+    engine
+)
+
+from src.infrastructure.postgres.models import (
+    Base
+)
+
 from src.container import (
     add_expense_use_case,
     get_summary_use_case,
     get_recent_expenses_use_case,
-    analyze_expenses_use_case
+    analyze_expenses_use_case,
+    agent_chat_use_case
 )
 
 from dotenv import load_dotenv
@@ -190,14 +196,14 @@ async def ask(
     try:
 
         result = (
-            analyze_expenses_use_case.execute(
+            agent_chat_use_case.execute(
                 user_id=user_id,
                 question=question
             )
         )
 
         await update.message.reply_text(
-            result
+            str(result)
         )
 
     except Exception as e:
@@ -253,4 +259,7 @@ def main():
 
 
 if __name__ == "__main__":
+    Base.metadata.create_all(
+        bind=engine
+    )
     main()

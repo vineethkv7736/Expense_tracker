@@ -1,7 +1,15 @@
 import json
 import re
+import os
 import requests
 from src.domain.constants.categories import CATEGORIES
+
+
+OLLAMA_URL = os.getenv(
+    "OLLAMA_URL"
+)
+if OLLAMA_URL and not OLLAMA_URL.startswith(("http://", "https://")):
+    OLLAMA_URL = f"http://{OLLAMA_URL}"
 
 class OllamaService:
 
@@ -107,7 +115,7 @@ class OllamaService:
             """
 
         response = requests.post(
-            "http://localhost:11434/api/generate",
+            f"{OLLAMA_URL}/api/generate",
             json={
                 "model": "qwen3:1.7b",
                 "prompt": prompt,
@@ -118,20 +126,11 @@ class OllamaService:
 
         raw = response.json()["response"]
 
-        print("RAW TYPE:", type(raw))
-        print("RAW VALUE:")
-        print(repr(raw))
-
         try:
             parsed = json.loads(raw)
         except Exception as e:
-            print("JSON PARSE ERROR")
-            print(raw)
             raise e
-
-        print("PARSED:")
-        print(parsed)
-
+        
         return parsed
     
 
@@ -185,7 +184,7 @@ class OllamaService:
             """
 
         response = requests.post(
-            "http://localhost:11434/api/generate",
+            f"{OLLAMA_URL}/api/generate",
             json={
                 "model": "qwen3:1.7b",
                 "prompt": prompt,

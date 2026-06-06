@@ -14,8 +14,6 @@ class AddExpenseUseCase:
     def execute(self, user_id: str, message: str):
         data = self.ai_service.categorize(message)
 
-        print("DATA:")
-        print(repr(data))
         
         expense_dto = ExpenseDTO(**data,user_id=user_id)
         expense = Expense(
