@@ -51,7 +51,7 @@ class OllamaService:
 
             11. If category is uncertain, use Other.
 
-            12. Never return {}.
+            12. Never return {{}}.
 
             Schema:
 
