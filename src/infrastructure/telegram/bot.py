@@ -79,8 +79,11 @@ Category: {expense.category}
         print(e)
 
         await update.message.reply_text(
-            "❌ Failed to add expense"
+
+            f"❌ Failed to add expense\n{type(e).__name__}: {e}"
+
         )
+        raise
 
 async def summary(
     update: Update,
